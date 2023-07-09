@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package wordcount;
+
+
+message JobRequest {
+    string input_location = 1;
+    string output_location = 2;
+    int32 m = 3;
+    int32 r = 4;
+}
+
+
+message node{
+    string ip = 1;
+    string port = 2;
+    int32 key = 3;
+}
+
+message reply{
+    string answer = 1;
+}
+
+message MapInput {
+    int32 key = 1;
+    string value = 2;
+}
+
+
+message MapOutput {
+    string key = 1;
+    int32 value = 2;
+}
+
+message mapOutputList{
+    repeated MapOutput mapOutput = 1;
+}
+
+message ReduceInput {
+    string key = 1;
+    repeated int32 values = 2;
+}
+
+
+message ReduceOutput {
+    string key = 1;
+    int32 value = 2;
+}
+
+message reduceOutputList{
+    repeated ReduceOutput reduceOutput = 1;
+}
+
+message files{
+    repeated string file = 1;
+}
+
+service WordCount {
+    rpc clientStartup(node) returns (reply);
+    rpc register_mapper(node) returns (reply);
+    rpc register_reducer(node) returns (reply);
+    rpc SubmitJob(JobRequest) returns (reply);
+    rpc callMapper(files) returns (reply);
+    rpc Map(MapInput) returns (mapOutputList);
+    rpc callReducer(files) returns (reply);
+    rpc Reduce(ReduceInput) returns (reduceOutputList);
+}
